@@ -17,10 +17,11 @@ void insertFront(int n)
 			front=n-1;
 		else
 			front--;
-	}
+	
 	printf("\nEnter the element to be inserted\n");
 	scanf("%d",&a[front]);
 	display(n);
+	}
 }
 
 void insertRear(int n)
