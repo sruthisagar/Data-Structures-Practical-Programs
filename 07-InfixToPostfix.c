@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include<ctype.h>
 #include<string.h>
+#include<math.h>
 
 #define SIZE 50
 
@@ -106,6 +107,9 @@ int evaluatePostfix(char* postfix)
                     break;
                 case '/': 
                     push(op1/op2);
+                    break;
+                case '^':
+                    push(pow(op1,op2));
                     break;
             }
         }
