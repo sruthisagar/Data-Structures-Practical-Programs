@@ -38,6 +38,8 @@ int priority(char elem)
         return 1;
     else if(elem=='*' || elem=='/')
         return 2;
+    else if(elem=='^')
+        return 3;
     return 0;
 }
 
