@@ -10,6 +10,20 @@ struct pqueue
 
 int front=-1,rear=-1;
 
+void display()
+{
+	printf("\nThe queue is:\n");
+
+	if(rear==-1)
+	{
+		printf("empty\n");
+		return;
+	}
+
+	for(int i=front; i<=rear; i++)
+		printf("Element: %d\tPriority: %d\n", p[i].data, p[i].prio);
+}
+
 void push(int n)
 {
 	if(rear==n-1)
@@ -55,20 +69,6 @@ void pop(int n)
 		front++;
 		display();
 	}
-}
-
-void display()
-{
-	printf("\nThe queue is:\n");
-
-	if(rear==-1)
-	{
-		printf("empty\n");
-		return;
-	}
-
-	for(int i=front; i<=rear; i++)
-		printf("Element: %d\tPriority: %d\n", p[i].data, p[i].prio);
 }
 
 void main()

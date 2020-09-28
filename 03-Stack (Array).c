@@ -6,6 +6,21 @@
 
 int a[size], top=-1;
 
+void display()
+{
+	printf("\nThe stack is:\n");
+
+	if(top==-1)
+	{
+		printf("empty\n");
+		return;
+	}
+	
+	for(int i=0;i<=top;i++)
+		printf("%d ",a[i]);
+	printf("\n");
+}
+
 void push(int n)
 {
 	if(top==n-1)
@@ -29,21 +44,6 @@ void pop()
 		top--;
 		display();
 	}
-}
-
-void display()
-{
-	printf("\nThe stack is:\n");
-
-	if(top==-1)
-	{
-		printf("empty\n");
-		return;
-	}
-	
-	for(int i=0;i<=top;i++)
-		printf("%d ",a[i]);
-	printf("\n");
 }
 
 void main()

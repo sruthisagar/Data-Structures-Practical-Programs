@@ -6,6 +6,21 @@
 
 int a[size], front=0, rear=0;
 
+void display()
+{
+	printf("\nThe queue is:\n");
+
+	if(rear==0)
+	{
+		printf("empty\n");
+		return;
+	}
+
+	for(int i=front+1; i<=rear; i++)
+		printf("%d ", a[i]);
+	printf("\n");
+}
+
 void push(int n)
 {
 	rear=(rear+1)%n;
@@ -32,21 +47,6 @@ void pop(int n)
 			front=(front+1)%n;
 		display();
 	}
-}
-
-void display()
-{
-	printf("\nThe queue is:\n");
-
-	if(rear==0)
-	{
-		printf("empty\n");
-		return;
-	}
-
-	for(int i=front+1; i<=rear; i++)
-		printf("%d ", a[i]);
-	printf("\n");
 }
 
 void main()

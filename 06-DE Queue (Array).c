@@ -5,6 +5,31 @@
 
 int a[20],front=-1,rear=-1;
 
+void display(int n)
+{
+	int f=front, r=rear;
+	printf ("\nThe queue is:\n");
+	if(f!=-1)
+	{
+		if(f<=r)
+		{
+			for(int i=f;i<=r;i++)
+				printf("%d ", a[i]);
+		}
+		else
+		{
+			for(int i=f;i<=n-1;i++)
+				printf("%d ", a[i]);
+			f=0;
+			for(int i=f;i<=r;i++)
+				printf("%d ", a[i]);
+		}
+		printf("\n");
+	}
+	else
+		printf("empty\n");
+}
+
 void insertFront(int n)
 {
 	if ((front==0 && rear==n-1) || front==rear+1)
@@ -75,31 +100,6 @@ void deleteRear(int n)
 			rear--;
 	}
 	display(n);
-}
-
-void display(int n)
-{
-	int f=front, r=rear;
-	printf ("\nThe queue is:\n");
-	if(f!=-1)
-	{
-		if(f<=r)
-		{
-			for(int i=f;i<=r;i++)
-				printf("%d ", a[i]);
-		}
-		else
-		{
-			for(int i=f;i<=n-1;i++)
-				printf("%d ", a[i]);
-			f=0;
-			for(int i=f;i<=r;i++)
-				printf("%d ", a[i]);
-		}
-		printf("\n");
-	}
-	else
-		printf("empty\n");
 }
 
 void main()
