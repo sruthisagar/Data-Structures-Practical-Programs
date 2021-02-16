@@ -1,317 +1,277 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 struct node
 {
-  struct node *lc;
-  int data;
-  struct node *rc;
+    struct node *left;
+    int data;
+    struct node *right;
 };
-struct node *root,*rcptr,*lcptr,*new,*parent,*ptr,*ptr1,*ptr0,*ptr2;
-int item,key,top,top1,flag;
 
-struct node* stack[100];
+struct node *root = NULL, *rptr, *lptr, *parent;
+int smallest;
 
-void creation(struct node* ptr,int item)
+void createTree(struct node *ptr, int item)
 {
-  int newl;
-  char option;
-  if(ptr!=NULL)
-  {
-    ptr->data=item;
-    printf("\nDoes the node %d have left subtree? [y/n]\n",item);
-    scanf(" %c",&option);
-    if(option=='Y' || option=='y')
+    int newItem;
+    char option;
+
+    if (ptr == NULL)
     {
-      lcptr=malloc(sizeof(struct node));
-      ptr->lc=lcptr;
-      printf("\nEnter the item to be inserted\n");
-      scanf("%d",&newl);
-      creation(lcptr,newl);
+        ptr = malloc(sizeof(struct node));
+        ptr->left = ptr->right = NULL;
+        root = ptr;
+    }
+    ptr->data = item;
+
+    printf("\nDoes the node %d have left subtree? [y/n]\n", item);
+    scanf(" %c", &option);
+    if (option == 'Y' || option == 'y')
+    {
+        lptr = malloc(sizeof(struct node));
+        ptr->left = lptr;
+        printf("\nEnter the item to be inserted\n");
+        scanf("%d", &newItem);
+        createTree(lptr, newItem);
     }
     else
-      ptr->lc=NULL;
-    printf("\nDoes the node %d have right subtree? [y/n]\n",item);
-    scanf(" %c",&option);
-    if(option=='Y' || option=='y')
+        ptr->left = NULL;
+
+    printf("\nDoes the node %d have right subtree? [y/n]\n", item);
+    scanf(" %c", &option);
+    if (option == 'Y' || option == 'y')
     {
-      rcptr=malloc(sizeof(struct node));
-      ptr->rc=rcptr;
-      printf("\nEnter the item to be inserted\n");
-      scanf("%d",&newl);
-      creation(rcptr,newl);
+        rptr = malloc(sizeof(struct node));
+        ptr->right = rptr;
+        printf("\nEnter the item to be inserted\n");
+        scanf("%d", &newItem);
+        createTree(rptr, newItem);
     }
     else
-    ptr->rc=NULL;
-  }
+        ptr->right = NULL;
+
 }
 
-void push(struct node* ptr)
+void inorder(struct node *ptr)
 {
-  top=top+1;
-  stack[top]=ptr;
-}
-
-struct node* pop()
-{
-  if(top!=-1)
-  {
-    ptr=stack[top];
-    top=top-1;
-    return ptr;
-  }
-}
-
-struct node* search_link(struct node* ptr,int key)
-{
-  struct node *ptr3,*ptr4;
-  push(ptr);
-  while(top!=-1)
-  {
-    ptr=pop();
-    if(ptr!=NULL)
+    if (ptr != NULL)
     {
-      ptr3=ptr->lc;
-      ptr4=ptr->rc;
-      if(ptr->data==key)
-        ptr2=ptr;
-      if(ptr3!=NULL)
-        push(ptr4);
-      if(ptr!=NULL)
-        push(ptr3);
+        inorder(ptr->left);
+        printf("%d ", ptr->data);
+        inorder(ptr->right);
     }
-  }
-  if(ptr2->data!=key)
+}
+
+void preorder(struct node *ptr)
+{
+    if (ptr != NULL)
+    {
+        printf("%d ", ptr->data);
+        preorder(ptr->left);
+        preorder(ptr->right);
+    }
+}
+
+void postorder(struct node *ptr)
+{
+    if (ptr != NULL)
+    {
+        postorder(ptr->left);
+        postorder(ptr->right);
+        printf("%d ", ptr->data);
+    }
+}
+
+void display(struct node *ptr)
+{
+    if (ptr == NULL)
+        printf("\nTree is empty");
+    else
+    {
+        printf("\nInorder traversal:\n");
+        inorder(ptr);
+        printf("\n\nPreorder traversal:\n");
+        preorder(ptr);
+        printf("\n\nPostorder traversal:\n");
+        postorder(ptr);
+    }
+    printf("\n");
+}
+
+struct node *searchParent(struct node *ptr, struct node *parent, int item)
+{
+    if(ptr != NULL)
+    {
+        if(ptr->data == item)
+        {
+            return parent;
+        }
+        else
+        {
+            parent = searchParent(ptr->left, ptr, item);
+            if(parent != NULL)
+                return parent;
+
+            parent = searchParent(ptr->right, ptr, item);
+            return parent;
+        }
+    }
     return NULL;
-  else
-   return ptr2;
 }
 
-void insertion(int key,int item)
+int smallestLeftNode(struct node *ptr)
 {
-  char option;
-  ptr=search_link(ptr0,key);
-  if(ptr==NULL)
-    printf("\nSearch unsucessful\n");
-  else
-  {
-    if(ptr->lc==NULL||ptr->rc==NULL)
+    struct node *temp;
+    while (ptr->left != NULL)
     {
-      printf("\nIs the item to be inserted as left or right subtree? [l/r]\n");
-      scanf(" %c",&option);
-      if(option=='L' || option=='l')
-      {
-        if(ptr->lc==NULL)
-        {
-          new=malloc(sizeof(struct node));
-          new->data=item;
-          new->lc=new->rc=NULL;
-          ptr->lc=new;
-        }
-        else
-          printf("\nInsertion not possible as left subtree\n");
-      }
-      else
-      {
-        if(ptr->rc==NULL)
-        {
-          new=malloc(sizeof(struct node));
-          new->data=item;
-          new->lc=new->rc=NULL;
-          ptr->rc=new;
-        }
-        else
-          printf("\nInsertion not possible as right subtree\n");
-      }
+        temp = ptr;
+        ptr = ptr->left;
     }
-    else
-      printf("\nThe key node already has subtrees\n");
-  }
+    temp->left = NULL;
+
+    return ptr->data;
 }
 
-void inorder(struct node* ptr1)
+void deleteNode(int item)
 {
-  if (ptr1!= NULL)
-  {
-    inorder(ptr1->lc);
-    printf("%d ", ptr1->data);
-    inorder(ptr1->rc);
-  }
-}
+    struct node *toDelete;
 
-void preorder(struct node* ptr1)
-{
-  if (ptr1!= NULL)
-  {
-    printf("%d ", ptr1->data);
-    preorder(ptr1->lc);
-    preorder(ptr1->rc);
-  }
-}
-
-void postorder(struct node* ptr1)
-{
-  if (ptr1!=NULL)
-  {
-    postorder(ptr1->lc);
-    postorder(ptr1->rc);
-    printf("%d ", ptr1->data);
-  }
-}
-
-void display(struct node* ptr1)
-{
-  if(ptr1==NULL)
-    printf("\nTree is empty\n");
-  else
-  {
-    printf("\nInorder traversal:\n");
-    inorder(ptr1);
-    printf("\n\nPreorder traversal:\n");
-    preorder(ptr1);
-    printf("\n\nPostorder traversal:\n");
-    postorder(ptr1);
-  }
-  printf("\n");
-}
-
-struct node* search_parent(struct node* ptr,int item)
-{
-  struct node *ptr3,*ptr4;
-  top=-1;
-  flag=0;
-  push(ptr);
-  while(ptr->data!=item)
-  {
-    ptr=pop();
-    if(ptr!=NULL)
-    {
-      ptr3=ptr->lc;
-      ptr4=ptr->rc;
-      if(ptr->data==item)
-      {
-        flag=1;
-        break;
-      }
-      if(ptr3!=NULL)
-      {
-        parent=ptr;
-        push(ptr3);
-      }
-      if(ptr4!=NULL)
-      {
-        parent=ptr;
-        push(ptr4);
-      }
-    }
-  }
-  if(flag==0)
-    return NULL;
-  else
-    return parent;
-}
-
-void deletion(int item)
-{
-  struct node *c;
-  ptr=root;
-  if(ptr==NULL)
-    printf("Tree is empty");
-  else
-  {
-    if(ptr->rc==NULL&&ptr->lc==NULL)
-    {
-      root->data=0;
-      ptr0=ptr1=NULL;
-      return;
-    }
-    parent=search_parent(ptr,item);
-    printf("\nParent:%d\n",parent->data);
-    if(parent==NULL)
-      printf("\nParent node not found\n");
+    if (root == NULL)
+        printf("Tree is empty");
     else
     {
-      if(parent->lc!=NULL)
-      {
-        c=parent->lc;
-        if(c->data==item)
+        if (root->right == NULL && root->left == NULL)
         {
-          parent->lc=NULL;
-          c->data=0;
-          c->lc=NULL;
-          c->rc=NULL;
-          free(c);
-        }
-      }
-      if(parent->rc!=NULL)
-      {
-        c=parent->rc;
-        if(c->data==item)
-        {
-          parent->rc=NULL;
-          c->data=0;
-          c->lc=NULL;
-          c->rc=NULL;
-          free(c);
-        }
-      }
-    }
-  }
-}  
+            if (root->data == item)
+            {
+                free(root);
+                root = NULL;
+            }
+            else
+                printf("\nItem not found\n");
 
-void main(int argc,char **argv)
+            return;
+        }
+        parent = searchParent(root, NULL, item);
+        // printf("\nParent: %d\n", parent->data);
+
+        if (parent == NULL)
+            printf("\nParent node not found\n");
+        else
+        {
+            if (parent->left != NULL)
+            {
+                toDelete = parent->left;
+                if (toDelete->data == item)
+                {
+                    if (toDelete->left == NULL && toDelete->right == NULL)
+                    {
+                        parent->left = NULL;
+                        free(toDelete);
+                    }
+                    else if (toDelete->left == NULL)
+                    {
+                        parent->left = toDelete->right;
+                        free(toDelete);
+                    }
+                    else if (toDelete->right == NULL)
+                    {
+                        parent->left = toDelete->left;
+                        free(toDelete);
+                    }
+                    else
+                    {
+                        if (toDelete->right->left != NULL)
+                        {
+                            smallest = smallestLeftNode(toDelete->right);
+                            toDelete->data = smallest;
+                        }
+                        else
+                        {
+                            toDelete->data = toDelete->right->data;
+                            toDelete->right = toDelete->right->right;
+                        }
+                    }
+                }
+            }
+            if (parent->right != NULL)
+            {
+                toDelete = parent->right;
+                if (toDelete->data == item)
+                {
+                    if (toDelete->left == NULL && toDelete->right == NULL)
+                    {
+                        parent->right = NULL;
+                        free(toDelete);
+                    }
+                    else if (toDelete->left == NULL)
+                    {
+                        parent->right = toDelete->right;
+                        free(toDelete);
+                    }
+                    else if (toDelete->right == NULL)
+                    {
+                        parent->right = toDelete->left;
+                        free(toDelete);
+                    }
+                    else
+                    {
+                        if (toDelete->right->left != NULL)
+                        {
+                            smallest = smallestLeftNode(toDelete->right);
+                            toDelete->data = smallest;
+                        }
+                        else
+                        {
+                            toDelete->data = toDelete->right->data;
+                            toDelete->right = toDelete->right->right;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void main()
 {
-  int choice,k=0;
-  root=malloc(sizeof(struct node));
-  root->lc=NULL;
-  root->rc=NULL;
-  while(k==0)
-  {
-    printf("\nBinary Tree\n___________");
-    printf("\n1.Create tree \n2.Insert \n3.Delete \n4.Display \n5.Exit\n");
-    printf("\nEnter your choice\n");
-    scanf("%d",&choice);
-    switch(choice)
+    int choice, item;
+
+    while (1)
     {
-      case 1:
-        printf("\nEnter the data of root node\n");
-        scanf("%d",&item);
-        creation(root,item);
-        ptr1=root;
-        ptr0=root;
-        break;
+        printf("\nBinary Tree\n___________");
+        printf("\n1.Create tree \n2.Delete \n3.Display \n4.Exit\n");
+        printf("\nEnter your choice\n");
+        scanf("%d", &choice);
 
-      case 2:
-        if(ptr1!=NULL)
+        switch (choice)
         {
-          printf("\nEnter the key node after which new node to be inserted\n");
-          scanf("%d",&key);
-          printf("\nEnter the item to be inserted\n");
-          scanf("%d",&item);
-          insertion(key,item);
+            case 1:
+                printf("\nEnter the data of root node\n");
+                scanf("%d", &item);
+                createTree(root, item);
+                break;
+
+            case 2:
+                if (root != NULL)
+                {
+                    printf("\nEnter the item to be deleted\n");
+                    scanf("%d", &item);
+                    deleteNode(item);
+                }
+                else
+                    printf("\nTree not created\n");
+                break;
+
+            case 3:
+                display(root);
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("\nInvalid choice\n");
         }
-        else
-          printf("\nCreate tree first then insert\n");
-        break;
-
-      case 3: 
-        if(ptr1!=NULL)
-        {
-          printf("\nEnter the item to be deleted\n");
-          scanf("%d",&item);
-          deletion(item);
-        }
-        else
-          printf("\nTree not created\n");
-        break;
-
-      case 4:
-        display(ptr1);
-        break;
-
-      case 5: 
-        exit(0);
-
-      default: printf("\nInvalid choice\n");
     }
-  }
 }
