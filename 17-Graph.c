@@ -1,90 +1,83 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-int a[13][13];
-int c[13];
-int q[13];
-int rear=0;
-int front=0;
-int state[13];
-int MAX=13;
+#define SIZE 13
 
-void b(int h,int u)
+int adj[SIZE][SIZE], q[SIZE], rear=0, front=0;
+bool visited[SIZE];
+
+void addEdge(int x, int y)
 {
-    a[h][u]=1;
-    a[u][h]=1;
+    adj[x][y] = 1;
+    adj[y][x] = 1;
 }
 
-void in_qu(int v)
+void enqueue(int element)
 {
-    if(rear==MAX-1)
+    if(rear == SIZE-1)
         printf("Queue overflow\n");
     else
     {
-        if(front==0)
+        if(front == 0)
             front=1;
-        rear+=1;
-        q[rear]=v;
+        rear++;
+        q[rear] = element;
     }
 }
 
-int isEmpty()
+int isQEmpty()
 {
-    if(front==-1||front>rear)
+    if(front==0 || front>rear)
         return 1;
     else
         return 0;
 }
 
-int del()
+int dequeue()
 {
     int deleted;
-    if(front==0||front>rear)
+    if(front==0 || front>rear)
     {
         printf("Queue Underflow\n");
         exit(0);
     }
     else
     {
-        deleted=q[front];
+        deleted = q[front];
         front++;
         return deleted;
     }
 }
 
-void dfs(int k)
+void DFS(int src)
 {
-    printf("%i ",k);
-    c[k]=1;
-    for(int y=0;y<13;y++)
+    visited[src] = true;
+    printf("%d ", src);
+    
+    for(int i=0; i<SIZE; i++)
     {
-        if(y==k)
-            continue;
-        if(a[k][y]==1)
-        {
-            if(c[y]==1)
-                continue;
-            dfs(y);
-        }
+        if(adj[src][i]==1 && !visited[i])
+            DFS(i);
     }
 }
 
-void bfs(int ve)
+void BFS(int src)
 {
-    int i;
-    in_qu(ve);
-    state[ve]=2;
-    while(!isEmpty())
+    visited[src] = true;
+    enqueue(src);
+
+    while(!isQEmpty())
     {
-        ve=del();
-        state[ve]=3;
-        printf("%i ",ve);
-        for(i=0;i<13;i++)
+        src = dequeue();
+        printf("%d ", src);
+
+        for(int i=0;i<SIZE;i++)
         {
-            if(a[ve][i]==1&&state[i]==1)
+            if(adj[src][i]==1 && !visited[i])
             {
-                in_qu(i);
-                state[i]=2;
+                visited[i] = true;
+                enqueue(i);
             }
         }
     }
@@ -92,122 +85,41 @@ void bfs(int ve)
 
 void main()
 {
-    q[0]=0;
-    int br,de;
+    int src;
 
-    for(int i=0;i<13;i++)
-    {
-        for(int j=0;j<13;j++)
-        {
-            a[i][j]=0;
-        }
-    }
+    addEdge(1,2);
+    addEdge(1,4);
+    addEdge(2,3);
+    addEdge(2,4);
+    addEdge(2,6);
+    addEdge(4,5);
+    addEdge(4,7);
+    addEdge(5,7);
+    addEdge(6,3);
+    addEdge(6,8);
+    addEdge(6,9);
+    addEdge(7,10);
+    addEdge(7,11);
+    addEdge(8,9);
+    addEdge(9,10);
+    addEdge(9,12);
+    addEdge(10,12);
 
-    b(1,2);
-    b(1,4);
-    b(2,3);
-    b(2,4);
-    b(2,6);
-    b(4,5);
-    b(4,7);
-    b(5,7);
-    b(6,3);
-    b(6,8);
-    b(6,9);
-    b(7,10);
-    b(7,11);
-    b(8,9);
-    b(9,10);
-    b(9,12);
-    b(10,12);
-
-    for(int i=0;i<13;i++)
-        c[i]=0;
+    for(int i=0; i<SIZE; i++)
+        visited[i] = false;
 
     printf("Enter the starting vertex for Depth First Search\n");
-    scanf("%i",&de);
+    scanf("%d", &src);
     printf("\nDepth First Search:\n");
-    dfs(de);
+    DFS(src);
     printf("\n");
 
-    for(int kk=0;kk<13;kk++)
-      state[kk]=1;
+    for(int i=0; i<SIZE; i++)
+        visited[i] = false;
 
     printf("\nEnter the starting vertex for Breadth First Search\n");
-    scanf("%i",&br);
+    scanf("%d", &src);
     printf("\nBreadth First Search:\n");
-    bfs(br);
+    BFS(src);
     printf("\n");
 }
-/*#include<stdio.h>
-int a[20][20], q[20], visited[20], n, i, j, f = 0, r = -1, c[13];;
-
-void bfs(int v)
-{
- for(i = 1; i <= n; i++)
- if(a[v][i] && !visited[i])
- q[++r] = i;
- if(f <= r)
-{
- visited[q[f]] = 1;
- bfs(q[f++]);
- }
-}
-void dfs(int k)
-{
-    printf("%i ",k);
-    c[k]=1;
-    for(int y=0;y<13;y++)
-    {
-        if(y==k)
-            continue;
-        if(a[k][y]==1)
-        {
-            if(c[y]==1)
-                continue;
-            dfs(y);
-        }
-    }
-}
-void b(int h,int u)
-{
-    a[h][u]=1;
-    a[u][h]=1;
-}
-void main() {
- int v,de;
- n=12;
- for(i=1; i <= n; i++) {
- q[i] = 0;
- visited[i] = 0;
- }
-
- for(int i=0;i<13;i++)
-    {
-    for(int j=0;j<13;j++)
-    {
-        a[i][j]=0;
-    }
-    }
-    b(1,2);b(1,4);b(4,5);
-    b(6,3);b(2,4);b(2,3);b(2,6);
-    b(5,7);b(6,8);b(6,9);b(4,7);
-    b(9,10);b(7,11);b(7,10);
-    b(8,9);b(9,12);b(10,12);
- for(int i=0;i<13;i++)
-    c[i]=0;
- printf("Enter the starting vertex for DFS\n");
- scanf("%i",&de);
- printf("\nDFS:\n");
- dfs(de);
-
- printf("\n");
- printf("\nEnter the starting vertex for BFS\n");
- scanf("%d", &v);
- printf("\nBFS:\n");
- bfs(v);
- for(i=0; i <= n; i++) {
- if(visited[i])
- printf("%d\t", q[i]);
- }
-}*/
