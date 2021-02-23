@@ -89,9 +89,9 @@ void multiply(node *poly1, node *poly2, node **result)
                 else
                     break;
             }
-            if (ptr->exp == newExp)
+            if (ptr->exp == newExp) // if exponents are equal, add coefficients
                 ptr->coef = ptr->coef + newCoef;
-            else if (ptr->exp > newExp)
+            else if (ptr->exp > newExp) // else, make and place product term at correct postion
             {
                 node *productNode = (node *)malloc(sizeof(node));
                 productNode->coef = newCoef;
