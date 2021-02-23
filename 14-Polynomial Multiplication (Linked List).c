@@ -1,201 +1,165 @@
 #include <stdio.h>
-#include<stdlib.h>
-#include<limits.h>
+#include <stdlib.h>
+#include <limits.h>
 
-struct poly
+struct polynomial
 {
-  int exp;
-  int coef;
-  struct poly *next;
+    int exp;
+    int coef;
+    struct polynomial *next;
 };
-typedef struct poly node;
-node *a = NULL, *b = NULL, *cc = NULL;
-void
-create (int i, int co, int ex, int w)
-{
-  node *k, *c;
-  k = (node *) malloc (sizeof (node));
-  k->coef = co;
-  k->exp = ex;
-  k->next = NULL;
-  if (w == 1)
-    {
-      if (i == 0)
-  {
-    a = k;
-  }
-      else
-  {
-    c = a;
-    while (c->next != NULL)
-      {
-        c = c->next;
-      }
-    c->next = k;
-  }
-    }
-  else
-    {
-      if (i == 0)
-  {
-    b = k;
-  }
-      else
-  {
-    c = b;
-    while (c->next != NULL)
-      {
-        c = c->next;
-      }
-    c->next = k;
-  }
-    }
+typedef struct polynomial node;
 
-}
-
-void
-sort (int i)
+void insert(int co, int ex, node **poly)
 {
-  node *h, *t1, *t2;
-  switch (i)
-    {
-    case 1:
-      h = a;
-      break;
-    case 2:
-      h = b;
-      break;
-    }
-  for (t1 = h; t1->next != NULL; t1 = t1->next)
-    {
-      for (t2 = t1->next; t2 != NULL; t2 = t2->next)
-  {
-    if (t2->exp > t1->exp)
-      {
-        int k;
-        k = t1->exp;
-        t1->exp = t2->exp;
-        t2->exp = k;
-        k = t1->coef;
-        t1->coef = t2->coef;
-        t2->coef = k;
-      }
-  }
-    }
-}
+    node *newNode, *productNode;
 
-node *
-make (int co, int ex)
-{
-  node *k;
-  k = (node *) malloc (sizeof (node));
-  k->coef = co;
-  k->exp = ex;
-  k->next = NULL;
-  return k;
-}
-
-node *
-inset (int co, int ex, node * jj)
-{
-  node *k;
-  k = make (co, ex);
-  k->next = jj->next;
-  jj->next = k;
-  return k;
-}
-
-void
-mult ()
-{
-  node *tail, *ap, *bp, *result;
-  int co, ex;
-  tail = result = make (0, INT_MAX);
-  for (ap = a; ap != NULL; ap = ap->next)
+    newNode = (node *)malloc(sizeof(node));
+    if (newNode == NULL)
+        printf("Failed to allocate memory\n");
+    else
     {
-      for (bp = b; bp != NULL; bp = bp->next)
-  {
-    tail = result;
-    co = ap->coef * bp->coef;
-    ex = ap->exp + bp->exp;
-    while (tail->next != NULL && tail->exp > ex)
-      {
-        if ((tail->next)->exp >= ex)
-    {
-      tail = tail->next;
-    }
+        newNode->coef = co;
+        newNode->exp = ex;
+        newNode->next = NULL;
+
+        if (*poly == NULL)
+            *poly = newNode;
         else
-    break;
-      }
-    if (tail->exp == ex)
-      {
-        tail->coef = tail->coef + co;
-      }
-    else if (tail->exp > ex)
-      {
-        tail = inset (co, ex, tail);
-      }
-  }
+        {
+            productNode = *poly;
+            while (productNode->next != NULL) // point productNode to last node
+                productNode = productNode->next;
+
+            productNode->next = newNode;
+        }
     }
-  tail = result;
-  result = result->next;
-  cc = result;
-  free (tail);
 }
 
-void
-display (int i)
+void sort(node *poly)
 {
-  node *k;
-  if (i == 1)
+    node *ptr1, *ptr2;
+    int temp;
+
+    for (ptr1 = poly; ptr1 != NULL; ptr1 = ptr1->next)
     {
-      k = a;
+        for (ptr2 = ptr1->next; ptr2 != NULL; ptr2 = ptr2->next)
+        {
+            if (ptr2->exp > ptr1->exp)
+            {
+                temp = ptr1->exp;
+                ptr1->exp = ptr2->exp;
+                ptr2->exp = temp;
+
+                temp = ptr1->coef;
+                ptr1->coef = ptr2->coef;
+                ptr2->coef = temp;
+            }
+        }
     }
-  else if (i == 2)
-    {
-      k = b;
-    }
-  else
-    k = cc;
-  while (k->next != NULL)
-    {
-      if (k->coef != 0)
-  printf ("%ix^%i + ", k->coef, k->exp);
-      k = k->next;
-    }
-    if (k->coef != 0)
-      printf ("%ix^%i", k->coef, k->exp);
-  printf ("\n");
 }
 
-void
-main ()
+void multiply(node *poly1, node *poly2, node **result)
 {
-  node *k;
-  int n, n2, ex, co;
-  printf ("Enter the number of terms in first polynomial\n");
-  scanf ("%i", &n);
-  printf ("\nEnter the first polynomial\n");
-  for (int i = 0; i < n; i++)
+    int newCoef, newExp;
+    node *ptr1, *ptr2, *ptr;
+
+    ptr1 = poly1;
+    ptr2 = poly2;
+
+    node *productNode = (node *)malloc(sizeof(node));
+    productNode->next = NULL;
+    productNode->coef = 0; // setting coefficient of first term as 0
+    productNode->exp = INT_MAX; // setting exponent of first term as greatest integer
+    *result = productNode;
+
+    while (ptr1 != NULL)
     {
-      scanf ("%i %i", &co, &ex);
-      create (i, co, ex, 1);
+        ptr2 = poly2;
+        while (ptr2 != NULL)
+        {
+            ptr = *result;
+            newCoef = ptr1->coef * ptr2->coef;
+            newExp = ptr1->exp + ptr2->exp;
+
+            while (ptr->next != NULL && ptr->exp > newExp) // finding correct position of product term
+            {
+                if ((ptr->next)->exp >= newExp)
+                    ptr = ptr->next;
+                else
+                    break;
+            }
+            if (ptr->exp == newExp)
+                ptr->coef = ptr->coef + newCoef;
+            else if (ptr->exp > newExp)
+            {
+                node *productNode = (node *)malloc(sizeof(node));
+                productNode->coef = newCoef;
+                productNode->exp = newExp;
+                productNode->next = ptr->next;
+                ptr->next = productNode;
+            }
+
+            ptr2 = ptr2->next;
+        }
+        ptr1 = ptr1->next;
     }
-  printf ("\nEnter the number of terms in second polynomial\n");
-  scanf ("%i", &n2);
-  printf ("\nEnter the second polynomial\n");
-  for (int i = 0; i < n2; i++)
+
+    node *toDelete;
+    ptr = toDelete = *result;
+    ptr = ptr->next;
+    *result = ptr;
+    free(toDelete); // deleting first term of result
+}
+
+void display(node *poly)
+{
+    if (poly != NULL)
     {
-      scanf ("%i %i", &co, &ex);
-      create (i, co, ex, 2);
+        while (poly->next != NULL)
+        {
+            if (poly->coef != 0)
+                printf("%ix^%i + ", poly->coef, poly->exp);
+            poly = poly->next;
+        }
+        if (poly->coef != 0)
+            printf("%ix^%i", poly->coef, poly->exp);
+        printf("\n");
     }
-  sort (1);
-  sort (2);
-  printf ("\nFirst polynomial:\n");
-  display (1);
-  printf ("\nSecond polynomial:\n");
-  display (2);
-  printf ("\nProduct of the two polynomials:\n");
-  mult ();
-  display (3);
+}
+
+void main()
+{
+    int n1, n2, coef, exp;
+    node *poly1 = NULL, *poly2 = NULL, *productPoly = NULL;
+
+    printf("Enter the number of terms in first polynomial\n");
+    scanf("%i", &n1);
+    printf("\nEnter the first polynomial\n");
+    for (int i=0; i<n1; i++)
+    {
+        scanf("%i %i", &coef, &exp);
+        insert(coef, exp, &poly1);
+    }
+
+    printf("\nEnter the number of terms in second polynomial\n");
+    scanf("%i", &n2);
+    printf("\nEnter the second polynomial\n");
+    for (int i=0; i<n2; i++)
+    {
+        scanf("%i %i", &coef, &exp);
+        insert(coef, exp, &poly2);
+    }
+
+    sort(poly1);
+    sort(poly2);
+
+    printf("\nFirst polynomial:\n");
+    display(poly1);
+    printf("\nSecond polynomial:\n");
+    display(poly2);
+
+    printf("\nProduct of the two polynomials:\n");
+    multiply(poly1, poly2, &productPoly);
+    display(productPoly);
 }
