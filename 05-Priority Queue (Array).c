@@ -74,12 +74,12 @@ void pop(int n)
 void main()
 {
 	int n, choice;
-	char ch;
+
 	printf("Enter the size of priority queue\n");
 	scanf("%d", &n);
-	do
+	while(1)
 	{
-		printf("\nPriority Queue Menu\n__________\n");
+		printf("\nPriority Queue\n______________\n");
 		printf("1. Push\n2. Pop\n3. Display\n4. Exit\n");
 		printf("\nEnter your choice\n");
 		scanf("%d", &choice);
@@ -93,11 +93,7 @@ void main()
 			case 3: display();
 					break;
 			case 4:	exit(0);
-			default:printf("Invalid choice\n");
-					
+			default:printf("Invalid choice\n");			
 		}
-		printf("\nDo you want to continue? [y/n]\n");
-		scanf(" %c", &ch);
 	}
-	while(ch=='Y'||ch=='y');
 }

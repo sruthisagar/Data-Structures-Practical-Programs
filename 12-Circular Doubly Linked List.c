@@ -137,12 +137,11 @@ void deleteFromEnd()
 void main()
 {
 	int choice, element;
-	char ch;
 
-	do
+	while(1)
 	{
 		printf("\nCircular Doubly Linked List\n__________________________\n");
-		printf("1.Insert at Beginning \n2.Insert at End \n3.Delete from Beginning \n4.Delete from End \n5.Display \n");
+		printf("1. Insert at Beginning \n2. Insert at End \n3. Delete from Beginning \n4. Delete from End \n5. Display \n6. Exit\n");
 		printf("\nEnter your choice\n");
 		scanf("%d", &choice);
 
@@ -172,13 +171,12 @@ void main()
 				display();
 				break;
 
+			case 6:
+				exit(0);
+
 			default:
 				printf("\nInvalid choice\n");
 		}
-	printf("\nDo you want to continue? [y/n]\n");
-	scanf(" %c", &ch);
 	}
-
-	while(ch=='Y' || ch=='y');
 	printf("\n");
 }

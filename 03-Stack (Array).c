@@ -49,10 +49,10 @@ void pop()
 void main()
 {
 	int n, choice;
-	char ch;
+	
 	printf("Enter the stack size\n");
 	scanf("%d", &n);
-	do
+	while(1)
 	{
 		printf("\nStack Menu\n__________\n");
 		printf("1. Push\n2. Pop\n3. Display\n4. Exit\n");
@@ -71,9 +71,5 @@ void main()
 			default:printf("Invalid choice\n");
 					
 		}
-		printf("\nDo you want to continue? [y/n]\n");
-		scanf(" %c", &ch);
-	}
-	while(ch=='Y'||ch=='y');
-	
+	}	
 }

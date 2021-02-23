@@ -143,7 +143,8 @@ void sum(int a1[spSize][3], int a2[spSize][3])
 
 void main()
 {
-	int r,c;
+	int r, c;
+	
 	printf("Enter the number of rows and columns\n");
 	scanf("%d %d", &r, &c);
 

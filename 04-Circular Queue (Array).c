@@ -2,24 +2,24 @@
 #include<stdlib.h>
 #define size 5
 
-int a[size], front=0, rear=0,n;
+int a[size], front=0, rear=0, n;
 
-void
-display ()
+void display ()
 {
-  int i;
-  if (front==rear)
-    printf ("\nQueue underflow");
-  else
-    {
-      printf ("\nThe queue is \t");
-      for (i = front+1; i != rear; i = (i + 1) % n)
-	printf ("%d  \t", a[i]);
-      printf ("%d ", a[i]);
-    }
+	int i;
+	printf ("\nThe queue is:\n");
+
+	if (front==rear)
+		printf ("empty\n");
+	else
+	{
+		for (i = front+1; i != rear; i = (i + 1) % n)
+			printf ("%d ", a[i]);
+		printf ("%d\n", a[i]);
+	}
 }
 
-void push(int n)
+void push()
 {
 	if(front==(rear+1)%n)
 		printf("Queue overflow\n");
@@ -32,7 +32,7 @@ void push(int n)
 	}
 }
 
-void pop(int n)
+void pop()
 {
 	if(front==rear)
 		printf("Queue underflow\n");
@@ -50,20 +50,21 @@ void pop(int n)
 void main()
 {
 	int choice;
+
 	printf("Enter the size of circular queue\n");
 	scanf("%d", &n);
 	while(1)
 	{
-		printf("\nCircular Queue Menu\n_______\n");
+		printf("\nCircular Queue\n______________\n");
 		printf("1. Push\n2. Pop\n3. Display\n4. Exit \n");
 		printf("\nEnter your choice\n");
 		scanf("%d", &choice);
 
 		switch(choice)
 		{
-			case 1:	push(n);
+			case 1:	push();
 					break;
-			case 2:	pop(n);
+			case 2:	pop();
 					break;
 			case 3: display();
 					break;

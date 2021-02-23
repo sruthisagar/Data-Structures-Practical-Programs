@@ -73,12 +73,11 @@ void delete()
 void main()
 {
 	int choice, item;
-	char ch;
 
-	do
+	while(1)
 	{
 		printf("\nQueue Menu\n__________\n");
-		printf("1.Insert \n2.Delete \n3.Display \n");
+		printf("1. Insert\n2. Delete\n3. Display\n4. Exit\n");
 		printf("\nEnter your choice\n");
 		scanf("%d", &choice);
 
@@ -98,13 +97,12 @@ void main()
 				display();
 				break;
 
+			case 4:
+				exit(0);
+
 			default:
 				printf("\nInvalid choice\n");
 		}
-	printf("\nDo you want to continue? [y/n]\n");
-	scanf(" %c", &ch);
 	}
-
-	while(ch=='Y' || ch=='y');
 	printf("\n");
 }

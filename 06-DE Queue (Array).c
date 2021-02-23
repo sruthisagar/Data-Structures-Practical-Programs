@@ -105,12 +105,12 @@ void deleteRear(int n)
 void main()
 {
 	int n, choice;
-	char ch;
+	
 	printf("Enter the size of double ended queue\n");
 	scanf("%d", &n);
-	do
+	while(1)
 	{
-		printf("\nDouble Ended Queue Menu\n_______________________\n");
+		printf("\nDouble Ended Queue\n__________________\n");
 		printf("1. Insert at front end\n2. Insert at rear end\n3. Delete at front end\n4. Delete at rear end\n5. Display\n6. Exit\n");
 		printf("\nEnter your choice\n");
 		scanf("%d", &choice);
@@ -128,14 +128,10 @@ void main()
 			case 5:	display(n);
 					break;
 			case 6:	exit(0);
-					break;
 			default:printf("Invalid choice\n");
 					
 		}
-		printf("\nDo you want to continue? [y/n]\n");
-		scanf(" %c", &ch);
 	}
-	while(ch=='Y'||ch=='y');
 }
 
 
