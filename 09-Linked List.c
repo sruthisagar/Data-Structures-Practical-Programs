@@ -54,13 +54,17 @@ void insertAtEnd(int x)
 		newNode->data = x;
 		newNode->next = NULL;
 
-		ptr = head;
-		while(ptr->next != NULL) // point ptr to last node
-			ptr = ptr->next;
+		if(head == NULL)
+			head = newNode;
+		else
+		{
+			ptr = head;
+			while(ptr->next != NULL) // point ptr to last node
+				ptr = ptr->next;
 
-		ptr->next = newNode;
+			ptr->next = newNode;
+		}
 	}
-
 	display();
 }
 
@@ -79,16 +83,26 @@ void insertAtPosition(int x, int position)
 		ptr = head;
 		for(int i=0; i<position-1; i++) // point ptr to the specified position
 		{
-			ptr = ptr->next;
 			if(ptr == NULL)
 			{
 				printf("\nInvalid position\n");
 				return;
 			}
+			ptr = ptr->next;
 		}
 
-		newNode->next = ptr->next; 
-		ptr->next = newNode;
+		if(position == 0)
+		{
+			newNode->next = head;
+			head = newNode;
+		}
+		else if(position == 1 && head == NULL)
+			printf("\nInvalid position\n");
+		else
+		{
+			newNode->next = ptr->next; 
+			ptr->next = newNode;
+		}
 	}
 
 	display();
@@ -178,14 +192,13 @@ void deleteFromPosition(int position)
 void main()
 {
 	int choice, element, position;
-	char ch;
 
-	do
+	while(1)
 	{
-		printf("\nLinked List Menu\n________________\n");
-		printf("1.Display\n");
-		printf("2.Insert at Beginning \n3.Insert at End \n4.Insert at a specified Position \n");
-		printf("5.Delete from Beginning \n6.Delete from End \n7.Delete from a specified Position\n");
+		printf("\nLinked List\n___________\n");
+		printf("1. Display\n");
+		printf("2. Insert at Beginning \n3. Insert at End \n4. Insert at a specified Position \n");
+		printf("5. Delete from Beginning \n6. Delete from End \n7. Delete from a specified Position\n8. Exit\n");
 		printf("\nEnter your choice\n");
 		scanf("%d", &choice);
 
@@ -227,13 +240,12 @@ void main()
 				deleteFromPosition(position);
 				break;
 
+			case 8:
+				exit(0);
+
 			default:
 				printf("\nInvalid choice\n");
 		}
-	printf("\nDo you want to continue? [y/n]\n");
-	scanf(" %c", &ch);
 	}
-
-	while(ch=='Y' || ch=='y');
 	printf("\n");
 }
