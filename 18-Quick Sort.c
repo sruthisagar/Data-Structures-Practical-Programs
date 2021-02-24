@@ -1,89 +1,88 @@
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
 
 struct Student
 {
-  char name[50];
-  float height;
-  int weight;
-}s[10];
+    char name[50];
+    float height;
+    int weight;
+} student[10];
 
-
-void quickSort (struct Student n[], int l, int f)
+void swap(struct Student *a, struct Student *b)
 {
-  int i, j, pivot;
-  char temp[50];
-  float nh;
-  int nw;
-  struct Student t;
-
-  if (l < f)
-  {
-    pivot = l;
-    i = l;
-    j = f;
-
-    while (i < j)
-  	{
-  	  while ((strcmp (n[i].name, n[pivot].name))<0 && i<=f)
-  	    i++;
-
-  	  while ((strcmp (n[j].name, n[pivot].name))>0 && j>=l)
-  	    j--;
-
-  	  if (i < j)
-  	    {
-  	      t = n[i];
-  	      n[i] = n[j];
-  	      n[j] = t;
-  	    }
-  	}
-
-    t = n[pivot];
-    n[pivot] = n[j];
-    n[j] = t;
-
-
-    quickSort (n, l, j-1);
-    quickSort (n, j+1, f);
-  }
+    struct Student temp;
+    temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-void main ()
+int partition(struct Student s[], int low, int high)
 {
-  int i = 0, n;
-  FILE *fp;
+    int i, pivot;
 
-  printf ("Student details from unsorted file:\n\n");
-  fp = fopen ("unsorted.txt", "r");
-  char b[50];
+    pivot = high;
+    i = low - 1;
 
-  while (!feof (fp))
-  {
-    fscanf (fp, "%s %s %f %d", s[i].name, b, &s[i].height, &s[i].weight);
-    strcat (s[i].name, " ");
-    strcat (s[i].name, b);
-    printf ("Name: %s\tHeight: %.1f\tWeight: %d\n", s[i].name, s[i].height, s[i].weight);
-    i++;
-  }
-  n = i;
-  fclose (fp);
+    for (int j = low; j <= high; j++)
+    {
+        if (strcmp(s[j].name, s[pivot].name) < 0)
+        {
+            i++;
+            swap(&s[i], &s[j]);
+        }
+    }
 
-  quickSort (s, 0, n-1);
+    swap(&s[i + 1], &s[pivot]);
 
-  fp = fopen ("sorted.txt", "w");
-  for (i = 0; i < n; i++)
-    fprintf(fp, "%s %.1f %d\n", s[i].name, s[i].height, s[i].weight);
-    // fwrite (&s[i], sizeof (s[i]), 1, fp);
-  fclose (fp);
+    return i + 1;
+}
 
-  printf ("\nStudent details from sorted file:\n\n");
-  fp = fopen ("sorted.txt", "r");
-  for (i = 0; i < n; i++)
-  {
-    fscanf (fp, "%s %s %f %d", s[i].name, b, &s[i].height, &s[i].weight);
-    // fread (&s[i], sizeof (s[i]), 1, fp);
-    printf ("Name: %s %s\tHeight: %.1f\tWeight: %d\n", s[i].name, b, s[i].height, s[i].weight);
-  }
-  fclose (fp);
+void quickSort(struct Student s[], int low, int high)
+{
+    if (low < high)
+    {
+        int partitionIndex = partition(s, low, high);
+
+        quickSort(s, low, partitionIndex - 1);
+        quickSort(s, partitionIndex + 1, high);
+    }
+}
+
+void main()
+{
+    int i = 0, n;
+    char lastName[50];
+    FILE *fp;
+
+    printf("Student details from unsorted file:\n\n");
+    fp = fopen("unsorted.txt", "r");
+    
+    while (!feof(fp))
+    {
+        fscanf(fp, "%s %s %f %d", student[i].name, lastName, &student[i].height, &student[i].weight);
+        strcat(student[i].name, " ");
+        strcat(student[i].name, lastName);
+        printf("Name: %s\tHeight: %.1f\tWeight: %d\n", student[i].name, student[i].height, student[i].weight);
+        i++;
+    }
+    n = i;
+    fclose(fp);
+
+    quickSort(student, 0, n - 1);
+
+    fp = fopen("sorted.txt", "w");
+    for (i = 0; i < n; i++)
+        fprintf(fp, "%s %.1f %d\n", student[i].name, student[i].height, student[i].weight);
+    // fwrite (&student[i], sizeof (student[i]), 1, fp);
+    fclose(fp);
+
+    printf("\nStudent details from sorted file:\n\n");
+    fp = fopen("sorted.txt", "r");
+    for (i = 0; i < n; i++)
+    {
+        fscanf(fp, "%s %s %f %d", student[i].name, lastName, &student[i].height, &student[i].weight);
+        // fread (&student[i], sizeof (student[i]), 1, fp);
+        printf("Name: %s %s\tHeight: %.1f\tWeight: %d\n", student[i].name, lastName, student[i].height, student[i].weight);
+    }
+    fclose(fp);
 }
