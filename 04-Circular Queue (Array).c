@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+
 #define size 5
 
 int a[size], front=0, rear=0, n;
